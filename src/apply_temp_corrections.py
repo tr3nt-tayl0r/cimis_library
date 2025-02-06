@@ -75,9 +75,9 @@ def corr_nref(df, tminNRef='Tmin', tdewNRef='Tdew', tmaxNRef='Tmax', bT=True):
     # Apply corrections based on dT and aT
     mask = df['dT'] > df['aT']
 
-    df.loc[mask, 'Tmax_corr'] = df[tmaxNRef] - (df['bT'] * (df['dT'] - df['aT']))  #(2.13)
-    df.loc[mask, 'Tmin_corr'] = df[tminNRef] - (df['bT'] * (df['dT'] - df['aT']))  #(2.14)
-    df.loc[mask, 'Tdew_corr'] = df[tdewNRef] + ((1.0 - df['bT']) * (df['dT'] - df['aT']))  #(2.15)
+    df.loc[mask, 'Tmax_corr'] = df[tmaxNRef] - (df['bT'] * (df['dT'] - df['aT']))  #(2.13) pg. 41
+    df.loc[mask, 'Tmin_corr'] = df[tminNRef] - (df['bT'] * (df['dT'] - df['aT']))  #(2.14) pg. 41   
+    df.loc[mask, 'Tdew_corr'] = df[tdewNRef] + ((1.0 - df['bT']) * (df['dT'] - df['aT']))  #(2.15) pg. 41
 
     # Add AI column
     df['AI'] = AI
@@ -102,4 +102,5 @@ def apply_temp_corrections(id):
 
 
 for id in station_ids:
-    apply_temp_corrections(id)   
+    apply_temp_corrections(id) 
+
