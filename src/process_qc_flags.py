@@ -18,51 +18,53 @@ solar_flags = ['H', 'R', 'S']
 
 for id in station_ids:
   dir = f'./cimis_data/station{id}'
-  with os.scandir(dir) as entries:
-    for entry in entries:    
-      file = f'{dir}/{entry.name}'
-      df = pd.read_csv(f'{file}')
+   
+  file = f'{dir}/station_id{id}_cimis_daily_MASTER.csv'
+  if os.path.exists(file):
+    df = pd.read_csv(f'{file}')
 
-      df.loc[df['ETo_Qc'].isin(eto_flags), 'ETo'] = np.nan
-      df.loc[df['Pr_Qc'].isin(pr_flags), 'Pr'] = np.nan
-      df.loc[df['Rs_Qc'].isin(solar_flags), 'Rs'] = np.nan
-      df.loc[df['Tmax_Qc'].isin(temp_flags), 'Tmax'] = np.nan
-      df.loc[df['Tmin_Qc'].isin(temp_flags), 'Tmin'] = np.nan
-      df.loc[df['Tdew_Qc'].isin(dew_flags), 'Tdew'] = np.nan
+    df.loc[df['ETo_Qc'].isin(eto_flags), 'ETo'] = np.nan
+    df.loc[df['Pr_Qc'].isin(pr_flags), 'Pr'] = np.nan
+    df.loc[df['Rs_Qc'].isin(solar_flags), 'Rs'] = np.nan
+    df.loc[df['Tmax_Qc'].isin(temp_flags), 'Tmax'] = np.nan
+    df.loc[df['Tmin_Qc'].isin(temp_flags), 'Tmin'] = np.nan
+    df.loc[df['Tdew_Qc'].isin(dew_flags), 'Tdew'] = np.nan
 
-      df.to_csv(f'{file}', index=False)
-      df['Date']=pd.to_datetime(df['Date'])
-      df.set_index(pd.to_datetime(df.Date), inplace=True)
+    df.to_csv(f'{file}', index=False)
+    df['Date']=pd.to_datetime(df['Date'])
+    df.set_index(pd.to_datetime(df.Date), inplace=True)
 
-      df_mjjas = df[(df['Date'].dt.month == 5) | (df['Date'].dt.month == 6) | (df['Date'].dt.month == 7) | (df['Date'].dt.month == 8) | (df['Date'].dt.month == 9)]
-      denom = df_mjjas.shape[0]
+    df_mjjas = df[(df['Date'].dt.month == 5) | (df['Date'].dt.month == 6) | (df['Date'].dt.month == 7) | (df['Date'].dt.month == 8) | (df['Date'].dt.month == 9)]
+    denom = df_mjjas.shape[0]
 
-      eto_num = df_mjjas['ETo'].isna().sum()
-      eto_frac = 1 - eto_num/denom
-      st_df.loc[st_df['StationNbr'] == id, 'ETo_Qc_fraction'] = eto_frac
+    eto_num = df_mjjas['ETo'].isna().sum()
+    eto_frac = 1 - eto_num/denom
+    st_df.loc[st_df['StationNbr'] == id, 'ETo_Qc_fraction'] = eto_frac
 
-      pr_num = df_mjjas['Pr'].isna().sum()
-      pr_frac = 1 - pr_num/denom
-      st_df.loc[st_df['StationNbr'] == id, 'Pr_Qc_fraction'] = pr_frac
+    pr_num = df_mjjas['Pr'].isna().sum()
+    pr_frac = 1 - pr_num/denom
+    st_df.loc[st_df['StationNbr'] == id, 'Pr_Qc_fraction'] = pr_frac
 
-      rs_num = df_mjjas['Rs'].isna().sum()
-      rs_frac = 1 - rs_num/denom
-      st_df.loc[st_df['StationNbr'] == id, 'Rs_Qc_fraction'] = rs_frac
+    rs_num = df_mjjas['Rs'].isna().sum()
+    rs_frac = 1 - rs_num/denom
+    st_df.loc[st_df['StationNbr'] == id, 'Rs_Qc_fraction'] = rs_frac
 
-      tmax_num = df_mjjas['Tmax'].isna().sum()
-      tmax_frac = 1 - tmax_num/denom
-      st_df.loc[st_df['StationNbr'] == id, 'Tmax_Qc_fraction'] = tmax_frac
+    tmax_num = df_mjjas['Tmax'].isna().sum()
+    tmax_frac = 1 - tmax_num/denom
+    st_df.loc[st_df['StationNbr'] == id, 'Tmax_Qc_fraction'] = tmax_frac
 
-      tmin_num = df_mjjas['Tmin'].isna().sum()
-      tmin_frac = 1 - tmin_num/denom
-      st_df.loc[st_df['StationNbr'] == id, 'Tmin_Qc_fraction'] = tmin_frac
+    tmin_num = df_mjjas['Tmin'].isna().sum()
+    tmin_frac = 1 - tmin_num/denom
+    st_df.loc[st_df['StationNbr'] == id, 'Tmin_Qc_fraction'] = tmin_frac
 
-      tdew_num = df_mjjas['Tdew'].isna().sum()
-      tdew_frac = 1 - tdew_num/denom
-      st_df.loc[st_df['StationNbr'] == id, 'Tdew_Qc_fraction'] = tdew_frac
+    tdew_num = df_mjjas['Tdew'].isna().sum()
+    tdew_frac = 1 - tdew_num/denom
+    st_df.loc[st_df['StationNbr'] == id, 'Tdew_Qc_fraction'] = tdew_frac
+  else:
+    continue
 
-    print(st_df[['StationNbr','ETo_Qc_fraction', 'Pr_Qc_fraction', 'Rs_Qc_fraction', 'Tmax_Qc_fraction', 'Tmin_Qc_fraction', 'Tdew_Qc_fraction']])
-    st_df.to_csv(f'{st_dir}{st_file}', index=False)
+print(st_df[['StationNbr','ETo_Qc_fraction', 'Pr_Qc_fraction', 'Rs_Qc_fraction', 'Tmax_Qc_fraction', 'Tmin_Qc_fraction', 'Tdew_Qc_fraction']])
+st_df.to_csv(f'{st_dir}{st_file}', index=False)
 
 '''
 dir = './cimis_data/'
