@@ -92,9 +92,7 @@ def apply_temp_corrections(id):
         print(f"Columns in the DataFrame: {df.columns}")
         df = corr_nref(df)
         print(df)  
-        df.to_csv(f'{dir}{entry.name}', index=False)
-    else:
-        continue    
+        df.to_csv(f'{dir}{entry.name}', index=False)    
 
 
 def do_temp_corrections():
