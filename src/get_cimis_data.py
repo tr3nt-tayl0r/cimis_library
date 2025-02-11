@@ -9,8 +9,9 @@ from datetime import datetime, timedelta
 # 46c39c6d-4d71-464c-a20f-a5c7d21bba8e
 # 7f9d336c-13a9-42fa-96f0-d279581c5aa1
 
-# Prompt user for API key
-#api_key = gp.getpass("Enter your CIMIS API key: ")
+''' 
+This file is used to download daily data from the CIMIS API
+'''
 
 def get_api_key():
   api_key = getpass.getpass("Enter your CIMIS API key: ")
