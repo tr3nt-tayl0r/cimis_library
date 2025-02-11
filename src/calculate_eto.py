@@ -41,6 +41,7 @@ def calculate_eto():
     file = f'./cimis_data/station{id}/station_id{id}_cimis_daily_MASTER.csv'
     if os.path.exists(file):
       df = pd.read_csv(file)
+      df.set_index(pd.to_datetime(df.Date), inplace=True)
 
       df_id = st_df[st_df['StationNbr'] == id]
 
