@@ -87,7 +87,7 @@ def apply_temp_corrections(id):
     dir = f'./cimis_data/station{id}/'
     file = f'{dir}/station_id{id}_cimis_daily_MASTER.csv'
     if os.path.exists(file):            
-        df = pd.read_csv(f'{dir}{entry.name}')
+        df = pd.read_csv(file)
         df = fix_col_names(df)
         print(f"Columns in the DataFrame: {df.columns}")
         df = corr_nref(df)
