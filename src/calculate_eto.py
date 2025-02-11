@@ -36,28 +36,29 @@ def calc_et_corr(row):
     input_units=units).eto()
   return eto_corr[0]
 
-for id in station_ids:
-  file = f'./cimis_data/station{id}/station_id{id}_cimis_daily_MASTER.csv'
-  if os.path.exists(file):
-    df = pd.read_csv(file)
+def calculate_eto():
+  for id in station_ids:
+    file = f'./cimis_data/station{id}/station_id{id}_cimis_daily_MASTER.csv'
+    if os.path.exists(file):
+      df = pd.read_csv(file)
 
-    df_id = st_df[st_df['StationNbr'] == id]
+      df_id = st_df[st_df['StationNbr'] == id]
 
-    elev = df_id['Elevation'].values[0]
-    df.loc[:,'Elev'] = elev
+      elev = df_id['Elevation'].values[0]
+      df.loc[:,'Elev'] = elev
 
-    lat = df_id['Lat'].values[0]
-    df.loc[:,'Lat'] = lat
+      lat = df_id['Lat'].values[0]
+      df.loc[:,'Lat'] = lat
 
-    longtd = df_id['Long'].values[0]
-    df.loc[:,'Long'] = longtd
+      longtd = df_id['Long'].values[0]
+      df.loc[:,'Long'] = longtd
 
-    df['ETo_uncor'] = df.apply(calc_et_uncorr, axis=1)
-    df['ETo_corr'] = df.apply(calc_et_corr, axis=1)
-    df['d_ETo'] = df['ETo_uncor'] - df['ETo_corr']
+      df['ETo_uncor'] = df.apply(calc_et_uncorr, axis=1)
+      df['ETo_corr'] = df.apply(calc_et_corr, axis=1)
+      df['d_ETo'] = df['ETo_uncor'] - df['ETo_corr']
 
-    df['d_ETo_avg'] = df['d_ETo'].groupby(pd.Grouper(axis=0, freq='M')).mean()
-    df['ETo_%_diff'] = (df['ETo_uncor'] / df['ETo_corr'] - 1) * 100
-    df['ETo_%_diff_monthly_avg'] = df['ETo_%_diff'].groupby(pd.Grouper(axis=0, freq='M')).mean()
+      df['d_ETo_avg'] = df['d_ETo'].groupby(pd.Grouper(axis=0, freq='M')).mean()
+      df['ETo_%_diff'] = (df['ETo_uncor'] / df['ETo_corr'] - 1) * 100
+      df['ETo_%_diff_monthly_avg'] = df['ETo_%_diff'].groupby(pd.Grouper(axis=0, freq='M')).mean()
 
-    df.to_csv(file, index=False)
+      df.to_csv(file, index=False)
