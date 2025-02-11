@@ -85,14 +85,16 @@ def corr_nref(df, tminNRef='Tmin', tdewNRef='Tdew', tmaxNRef='Tmax', bT=True):
 
 def apply_temp_corrections(id): 
     dir = f'./cimis_data/station{id}/'
-    with os.scandir(dir) as entries:   
-        for entry in entries:            
-            df = pd.read_csv(f'{dir}{entry.name}')
-            df = fix_col_names(df)
-            print(f"Columns in the DataFrame: {df.columns}")
-            df = corr_nref(df)
-            print(df)  
-            df.to_csv(f'{dir}{entry.name}', index=False)
+    file = f'{dir}/station_id{id}_cimis_daily_MASTER.csv'
+    if os.path.exists(file):            
+        df = pd.read_csv(f'{dir}{entry.name}')
+        df = fix_col_names(df)
+        print(f"Columns in the DataFrame: {df.columns}")
+        df = corr_nref(df)
+        print(df)  
+        df.to_csv(f'{dir}{entry.name}', index=False)
+    else:
+        continue    
 
 
 def do_temp_corrections():
