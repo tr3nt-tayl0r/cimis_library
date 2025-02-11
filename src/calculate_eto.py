@@ -54,6 +54,10 @@ for id in station_ids:
 
     df['ETo_uncor'] = df.apply(calc_et_uncorr, axis=1)
     df['ETo_corr'] = df.apply(calc_et_corr, axis=1)
-    df['ETo_CIMIS'] = df['ETo']
+    df['d_ETo'] = df['ETo_uncor'] - df['ETo_corr']
+
+    df['d_ETo_avg'] = df['d_ETo'].groupby(pd.Grouper(axis=0, freq='M')).mean()
+    df['ETo_%_diff'] = (df['ETo_uncor'] / df['ETo_corr'] - 1) * 100
+    df['ETo_%_diff_monthly_avg'] = df['ETo_%_diff'].groupby(pd.Grouper(axis=0, freq='M')).mean()
 
     df.to_csv(file, index=False)
