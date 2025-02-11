@@ -95,7 +95,7 @@ def apply_temp_corrections(id):
             df.to_csv(f'{dir}{entry.name}', index=False)
 
 
-def apply_temp_corrections():
+def do_temp_corrections():
     for id in station_ids:
         apply_temp_corrections(id) 
 
