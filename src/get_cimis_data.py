@@ -13,10 +13,6 @@ from datetime import datetime, timedelta
 This file is used to download daily data from the CIMIS API
 '''
 
-def get_api_key():
-  api_key = getpass.getpass("Enter your CIMIS API key: ")
-  return api_key
-
 def fix_col_names(df):
   '''corrects column names from CIMIS based on dictionary'''
   rename_dict = {'DayAirTmpMin.Value':'Tmin',
